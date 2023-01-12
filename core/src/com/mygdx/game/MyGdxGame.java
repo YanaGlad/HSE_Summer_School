@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.TimeUtils;
 
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch; // ссылка на объект, отвечающий за вывод изображений
@@ -34,6 +35,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	// создаём массив ссылок на объекты комаров
 	Mosquito[] komar = new Mosquito[10];
 	int kills = 0;
+
+	// переменные для работы с таймером
+	long timeStartGame, timeCurrently;
 
 	@Override
 	public void create () {
@@ -62,6 +66,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		for(int i=0; i<komar.length; i++){
 			komar[i] = new Mosquito();
 		}
+
+		// узнаём время старта игры
+		timeStartGame = TimeUtils.millis();
 	}
 
 	void createFont(){
@@ -72,6 +79,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		parameter.borderWidth = 3;
 		parameter.borderColor = Color.BLACK;
 		font = generator.generateFont(parameter);
+	}
+
+	String timeToString(long t){
+		String sec = "" + t/1000%60/10 + t/1000%60%10;
+		String min = "" + t/1000/60/10 + t/1000/60%10;
+		return min+":"+sec;
 	}
 
 	@Override
@@ -93,6 +106,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		for(int i=0; i<komar.length; i++) {
 			komar[i].fly();
 		}
+		timeCurrently = TimeUtils.millis() - timeStartGame;
 
 		// вывод изображений
 		camera.update();
@@ -103,6 +117,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			batch.draw(imgKomar[komar[i].faza], komar[i].x, komar[i].y, komar[i].width, komar[i].height, 0, 0, 500, 500, komar[i].isFlip(), false);
 		}
 		font.draw(batch, "KILLS: "+kills, 10, scrHeight-10);
+		font.draw(batch, "TIME: "+timeToString(timeCurrently), scrWidth-400, scrHeight-10);
 		batch.end();
 	}
 	
