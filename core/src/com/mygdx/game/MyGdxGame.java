@@ -22,15 +22,18 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	Texture[] imgKomar = new Texture[11]; // ссылки на изображения
 	Texture imgBackGround; // фоновое изображение
-	Texture imgExit;
-	Texture imgSndOn, imgSmdOff;
-	Texture imgPause, imgPlay;
+	Texture imgBtnExit;
+	Texture imgBtnSndOn, imgBtnSndOff;
+	Texture imgBtnPause, imgBtnPlay;
 
 	Sound[] sndKomar = new Sound[4];
 	// Music sndMusic;
 
 	public static float scrWidth = 1280;
 	public static float scrHeight = 720;
+
+	// кнопки интерфейса игры
+	MosButton btnExit;
 
 	// создаём массив ссылок на объекты комаров
 	Mosquito[] komar = new Mosquito[10];
@@ -53,6 +56,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			imgKomar[i] = new Texture("mosq"+i+".png"); // создать объект-картинку и загрузить в него изображение
 		}
 		imgBackGround = new Texture("moscowcity.jpg");
+		imgBtnExit = new Texture("exit.png");
 
 		// загружаем звуки
 		for(int i=0; i<sndKomar.length; i++) {
@@ -61,6 +65,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		//sndMusic = Gdx.audio.newMusic(Gdx.files.internal("jinglebells.mp3"));
 		//sndMusic.setLooping(true);
 		//sndMusic.play();
+
+		// создаём кнопки
+		btnExit = new MosButton(scrWidth-60, scrHeight-60, 50);
 
 		// создаём объекты комаров
 		for(int i=0; i<komar.length; i++){
@@ -100,6 +107,9 @@ public class MyGdxGame extends ApplicationAdapter {
 					break;
 				}
 			}
+			if(btnExit.hit(touch.x, touch.y)){
+				Gdx.app.exit();
+			}
 		}
 
 		// события игры
@@ -116,8 +126,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		for(int i=0; i<komar.length; i++) {
 			batch.draw(imgKomar[komar[i].faza], komar[i].x, komar[i].y, komar[i].width, komar[i].height, 0, 0, 500, 500, komar[i].isFlip(), false);
 		}
+		batch.draw(imgBtnExit, btnExit.x, btnExit.y, btnExit.width, btnExit.height);
 		font.draw(batch, "KILLS: "+kills, 10, scrHeight-10);
-		font.draw(batch, "TIME: "+timeToString(timeCurrently), scrWidth-400, scrHeight-10);
+		font.draw(batch, "TIME: "+timeToString(timeCurrently), scrWidth-450, scrHeight-10);
 		batch.end();
 	}
 	
@@ -128,6 +139,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			imgKomar[i].dispose();
 		}
 		imgBackGround.dispose();
+		imgBtnExit.dispose();
 		//sndMusic.dispose();
 	}
 }
