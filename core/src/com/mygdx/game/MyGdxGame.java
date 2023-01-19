@@ -34,6 +34,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	// кнопки интерфейса игры
 	MosButton btnExit;
+	MosButton btnSound;
 
 	// создаём массив ссылок на объекты комаров
 	Mosquito[] komar = new Mosquito[10];
@@ -41,6 +42,9 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	// переменные для работы с таймером
 	long timeStartGame, timeCurrently;
+
+	// логические переменные
+	boolean soundOn = true;
 
 	@Override
 	public void create () {
@@ -57,6 +61,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		imgBackGround = new Texture("moscowcity.jpg");
 		imgBtnExit = new Texture("exit.png");
+		imgBtnSndOn = new Texture("sndon.png");
+		imgBtnSndOff = new Texture("sndoff.png");
 
 		// загружаем звуки
 		for(int i=0; i<sndKomar.length; i++) {
@@ -68,6 +74,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		// создаём кнопки
 		btnExit = new MosButton(scrWidth-60, scrHeight-60, 50);
+		btnSound = new MosButton(scrWidth-60, scrHeight-120, 50);
 
 		// создаём объекты комаров
 		for(int i=0; i<komar.length; i++){
@@ -103,12 +110,18 @@ public class MyGdxGame extends ApplicationAdapter {
 			for(int i=komar.length-1; i>=0; i--) {
 				if(komar[i].isAlive && komar[i].hit(touch.x, touch.y)) {
 					kills++;
-					sndKomar[MathUtils.random(0, 3)].play();
+					if(soundOn) {
+						sndKomar[MathUtils.random(0, 3)].play();
+					}
 					break;
 				}
 			}
+			// нажатия на кнопки
 			if(btnExit.hit(touch.x, touch.y)){
-				Gdx.app.exit();
+				Gdx.app.exit(); // выход из игры
+			}
+			if(btnSound.hit(touch.x, touch.y)){
+				soundOn = !soundOn;
 			}
 		}
 
@@ -127,6 +140,11 @@ public class MyGdxGame extends ApplicationAdapter {
 			batch.draw(imgKomar[komar[i].faza], komar[i].x, komar[i].y, komar[i].width, komar[i].height, 0, 0, 500, 500, komar[i].isFlip(), false);
 		}
 		batch.draw(imgBtnExit, btnExit.x, btnExit.y, btnExit.width, btnExit.height);
+		if(soundOn) {
+			batch.draw(imgBtnSndOn, btnSound.x, btnSound.y, btnSound.width, btnSound.height);
+		} else {
+			batch.draw(imgBtnSndOff, btnSound.x, btnSound.y, btnSound.width, btnSound.height);
+		}
 		font.draw(batch, "KILLS: "+kills, 10, scrHeight-10);
 		font.draw(batch, "TIME: "+timeToString(timeCurrently), scrWidth-450, scrHeight-10);
 		batch.end();
