@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -29,8 +28,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	Sound[] sndKomar = new Sound[4];
 	// Music sndMusic;
 
-	public static float scrWidth = 1280;
-	public static float scrHeight = 720;
+	// ширина и высота экрана
+	public static final float SCR_WIDTH = 1280;
+	public static final float SCR_HEIGHT = 720;
 
 	// кнопки интерфейса игры
 	MosButton btnExit;
@@ -46,11 +46,15 @@ public class MyGdxGame extends ApplicationAdapter {
 	// логические переменные
 	boolean soundOn = true;
 
+	// состояния игры
+	public static final int PLAY_GAME = 1, ENTER_NAME = 2, SHOW_TABLE = 3;
+	int situation = PLAY_GAME;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch(); // создать объект, отвечающий за вывод изображений
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, scrWidth, scrHeight);
+		camera.setToOrtho(false, SCR_WIDTH, SCR_HEIGHT);
 		touch = new Vector3();
 
 		createFont();
@@ -73,8 +77,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		//sndMusic.play();
 
 		// создаём кнопки
-		btnExit = new MosButton(scrWidth-60, scrHeight-60, 50);
-		btnSound = new MosButton(scrWidth-60, scrHeight-120, 50);
+		btnExit = new MosButton(SCR_WIDTH -60, SCR_HEIGHT -60, 50);
+		btnSound = new MosButton(SCR_WIDTH -60, SCR_HEIGHT -120, 50);
 
 		// создаём объекты комаров
 		for(int i=0; i<komar.length; i++){
@@ -101,19 +105,28 @@ public class MyGdxGame extends ApplicationAdapter {
 		return min+":"+sec;
 	}
 
+	void gameOver(){
+		situation = ENTER_NAME;
+	}
+
 	@Override
 	public void render () {
 		// касания экрана
 		if(Gdx.input.justTouched()){
 			touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touch);
-			for(int i=komar.length-1; i>=0; i--) {
-				if(komar[i].isAlive && komar[i].hit(touch.x, touch.y)) {
-					kills++;
-					if(soundOn) {
-						sndKomar[MathUtils.random(0, 3)].play();
+			if(situation == PLAY_GAME) {
+				for (int i = komar.length - 1; i >= 0; i--) {
+					if (komar[i].isAlive && komar[i].hit(touch.x, touch.y)) {
+						kills++;
+						if (soundOn) {
+							sndKomar[MathUtils.random(0, 3)].play();
+						}
+						if (kills == komar.length) {
+							gameOver();
+						}
+						break;
 					}
-					break;
 				}
 			}
 			// нажатия на кнопки
@@ -129,13 +142,15 @@ public class MyGdxGame extends ApplicationAdapter {
 		for(int i=0; i<komar.length; i++) {
 			komar[i].fly();
 		}
-		timeCurrently = TimeUtils.millis() - timeStartGame;
+		if(situation == PLAY_GAME) {
+			timeCurrently = TimeUtils.millis() - timeStartGame;
+		}
 
 		// вывод изображений
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		batch.draw(imgBackGround, 0, 0, scrWidth, scrHeight);
+		batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
 		for(int i=0; i<komar.length; i++) {
 			batch.draw(imgKomar[komar[i].faza], komar[i].x, komar[i].y, komar[i].width, komar[i].height, 0, 0, 500, 500, komar[i].isFlip(), false);
 		}
@@ -145,8 +160,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		} else {
 			batch.draw(imgBtnSndOff, btnSound.x, btnSound.y, btnSound.width, btnSound.height);
 		}
-		font.draw(batch, "KILLS: "+kills, 10, scrHeight-10);
-		font.draw(batch, "TIME: "+timeToString(timeCurrently), scrWidth-450, scrHeight-10);
+		font.draw(batch, "KILLS: "+kills, 10, SCR_HEIGHT -10);
+		font.draw(batch, "TIME: "+timeToString(timeCurrently), SCR_WIDTH -450, SCR_HEIGHT -10);
 		batch.end();
 	}
 	
