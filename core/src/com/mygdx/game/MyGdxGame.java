@@ -18,6 +18,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	OrthographicCamera camera;
 	Vector3 touch;
 	BitmapFont font;
+	InputKeyboard keyboard;
 
 	Texture[] imgKomar = new Texture[11]; // ссылки на изображения
 	Texture imgBackGround; // фоновое изображение
@@ -37,7 +38,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	MosButton btnSound;
 
 	// создаём массив ссылок на объекты комаров
-	Mosquito[] komar = new Mosquito[10];
+	Mosquito[] komar = new Mosquito[5];
 	int kills = 0;
 
 	// переменные для работы с таймером
@@ -50,6 +51,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	public static final int PLAY_GAME = 1, ENTER_NAME = 2, SHOW_TABLE = 3;
 	int situation = PLAY_GAME;
 
+	String name;
+	long time;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch(); // создать объект, отвечающий за вывод изображений
@@ -58,6 +62,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		touch = new Vector3();
 
 		createFont();
+
+		keyboard = new InputKeyboard(SCR_WIDTH, SCR_HEIGHT, 10);
 
 		// загружаем картинки
 		for(int i=0; i<imgKomar.length; i++) {
@@ -92,6 +98,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	void createFont(){
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("wellwait.otf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
 		parameter.size = 50;
 		parameter.color = Color.ORANGE;
 		parameter.borderWidth = 3;
@@ -129,6 +136,14 @@ public class MyGdxGame extends ApplicationAdapter {
 					}
 				}
 			}
+			if(situation == ENTER_NAME){
+				keyboard.hit(touch.x, touch.y);
+				if(keyboard.endOfEdit()){
+					situation = SHOW_TABLE;
+					name = keyboard.getText();
+					time = timeCurrently;
+				}
+			}
 			// нажатия на кнопки
 			if(btnExit.hit(touch.x, touch.y)){
 				Gdx.app.exit(); // выход из игры
@@ -162,6 +177,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		font.draw(batch, "KILLS: "+kills, 10, SCR_HEIGHT -10);
 		font.draw(batch, "TIME: "+timeToString(timeCurrently), SCR_WIDTH -450, SCR_HEIGHT -10);
+		if(situation == ENTER_NAME){
+			keyboard.draw(batch);
+		}
+		if(situation == SHOW_TABLE){
+			font.draw(batch, name+"...."+timeToString(time), SCR_WIDTH/3, SCR_HEIGHT/2);
+		}
 		batch.end();
 	}
 	
@@ -174,5 +195,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		imgBackGround.dispose();
 		imgBtnExit.dispose();
 		//sndMusic.dispose();
+		keyboard.dispose();
 	}
 }
