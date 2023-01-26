@@ -14,11 +14,11 @@ import com.badlogic.gdx.utils.TimeUtils;
 public class InputKeyboard {
     private boolean endOfEdit;
 
-    private float x, y; // координаты
-    private float width, height; // ширина и высота всей клавиатуры
-    private float keyWidth, keyHeight; // ширина и высота каждой кнопки
-    private float padding; // расстояние между кнопками
-    private int textLength; // длина вводимого текста
+    private final float x, y; // координаты
+    private final float width, height; // ширина и высота всей клавиатуры
+    private final float keyWidth, keyHeight; // ширина и высота каждой кнопки
+    private final float padding; // расстояние между кнопками
+    private final int textLength; // длина вводимого текста
 
     private BitmapFont font;
 
@@ -29,14 +29,14 @@ public class InputKeyboard {
     private static final String LETTERS_RU_LOW  = "!@#$%:&*()_~йцукенгшщзхъ^фывапролджэ`ячсмитьбюё|";
     private String letters = LETTERS_EN_CAPS;
 
-    private Texture imgAtlasKeys; // все изображения кнопок
-    private TextureRegion imgEditText; // поле ввода
-    private TextureRegion imgKeyUP, imgKeyDown; // кнопка выпуклая/вдавленная
-    private TextureRegion imgKeyBS, imgKeyEnter, imgKeyCL, imgKeySW; // картинки управляющих кноп
+    private final Texture imgAtlasKeys; // все изображения кнопок
+    private final TextureRegion imgEditText; // поле ввода
+    private final TextureRegion imgKeyUP, imgKeyDown; // кнопка выпуклая/вдавленная
+    private final TextureRegion imgKeyBS, imgKeyEnter, imgKeyCL, imgKeySW; // картинки управляющих кноп
 
     private long timeStart, timeDuration = 150; // длительность надавливания кнопки
     private int keyPressed = -1; // код нажатой кнопки
-    private Array<Key> keys = new Array<>(); // список всех кноп
+    private final Array<Key> keys = new Array<>(); // список всех кноп
 
     public InputKeyboard(float scrWidth, float scrHeight, int textLength){
         generateFont();
