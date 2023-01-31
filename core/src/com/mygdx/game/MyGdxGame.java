@@ -39,7 +39,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	// создаём массив ссылок на объекты комаров
 	Mosquito[] komar = new Mosquito[5];
-	int kills = 0;
+	int kills;
 
 	// переменные для работы с таймером
 	long timeStartGame, timeCurrently;
@@ -49,10 +49,12 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	// состояния игры
 	public static final int PLAY_GAME = 1, ENTER_NAME = 2, SHOW_TABLE = 3;
-	int situation = PLAY_GAME;
+	int situation;
 
 	String name;
 	long time;
+
+	Player[] players = new Player[7];
 
 	@Override
 	public void create () {
@@ -86,13 +88,10 @@ public class MyGdxGame extends ApplicationAdapter {
 		btnExit = new MosButton(SCR_WIDTH -60, SCR_HEIGHT -60, 50);
 		btnSound = new MosButton(SCR_WIDTH -60, SCR_HEIGHT -120, 50);
 
-		// создаём объекты комаров
-		for(int i=0; i<komar.length; i++){
-			komar[i] = new Mosquito();
+		for (int i = 0; i < players.length; i++) {
+			players[i] = new Player("noname", 0);
 		}
-
-		// узнаём время старта игры
-		timeStartGame = TimeUtils.millis();
+		gameStart();
 	}
 
 	void createFont(){
@@ -110,6 +109,18 @@ public class MyGdxGame extends ApplicationAdapter {
 		String sec = "" + t/1000%60/10 + t/1000%60%10;
 		String min = "" + t/1000/60/10 + t/1000/60%10;
 		return min+":"+sec;
+	}
+
+	void gameStart() {
+		situation = PLAY_GAME;
+		kills = 0;
+		// создаём объекты комаров
+		for(int i=0; i<komar.length; i++){
+			komar[i] = new Mosquito();
+		}
+
+		// узнаём время старта игры
+		timeStartGame = TimeUtils.millis();
 	}
 
 	void gameOver(){
@@ -136,15 +147,19 @@ public class MyGdxGame extends ApplicationAdapter {
 					}
 				}
 			}
+			if(situation == SHOW_TABLE){
+				gameStart();
+			}
 			if(situation == ENTER_NAME){
 				keyboard.hit(touch.x, touch.y);
 				if(keyboard.endOfEdit()){
 					situation = SHOW_TABLE;
-					name = keyboard.getText();
-					time = timeCurrently;
+					players[0].name = keyboard.getText();
+					players[0].time = timeCurrently;
 				}
 			}
-			// нажатия на кнопки
+
+			// нажатия на экранные кнопки
 			if(btnExit.hit(touch.x, touch.y)){
 				Gdx.app.exit(); // выход из игры
 			}
@@ -181,7 +196,10 @@ public class MyGdxGame extends ApplicationAdapter {
 			keyboard.draw(batch);
 		}
 		if(situation == SHOW_TABLE){
-			font.draw(batch, name+"...."+timeToString(time), SCR_WIDTH/3, SCR_HEIGHT/2);
+			for (int i = 0; i < players.length; i++) {
+				font.draw(batch, players[i].name+"...."+timeToString(players[i].time), SCR_WIDTH/3, SCR_HEIGHT*3/4-i*50);
+			}
+
 		}
 		batch.end();
 	}
