@@ -54,6 +54,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	String name;
 	long time;
 
+	// таблица рекордов
 	Player[] players = new Player[7];
 
 	@Override
@@ -124,7 +125,29 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 
 	void gameOver(){
-		situation = ENTER_NAME;
+
+	}
+
+	void sortTableOfRecords(){
+
+		for (int i = 0; i < players.length; i++) {
+			if(players[i].time == 0) players[i].time = 1000000000;
+		}
+		for (int j = 0; j < players.length; j++) {
+			for (int i = 0; i < players.length - 1; i++) {
+				if (players[i].time > players[i + 1].time) {
+					long z = players[i].time;
+					players[i].time = players[i + 1].time;
+					players[i + 1].time = z;
+					String s = players[i].name;
+					players[i].name = players[i + 1].name;
+					players[i + 1].name = s;
+				}
+			}
+		}
+		for (int i = 0; i < players.length; i++) {
+			if(players[i].time == 1000000000) players[i].time = 0;
+		}
 	}
 
 	@Override
@@ -141,7 +164,7 @@ public class MyGdxGame extends ApplicationAdapter {
 							sndKomar[MathUtils.random(0, 3)].play();
 						}
 						if (kills == komar.length) {
-							gameOver();
+							situation = ENTER_NAME;
 						}
 						break;
 					}
@@ -154,8 +177,9 @@ public class MyGdxGame extends ApplicationAdapter {
 				keyboard.hit(touch.x, touch.y);
 				if(keyboard.endOfEdit()){
 					situation = SHOW_TABLE;
-					players[0].name = keyboard.getText();
-					players[0].time = timeCurrently;
+					players[players.length-1].name = keyboard.getText();
+					players[players.length-1].time = timeCurrently;
+					sortTableOfRecords();
 				}
 			}
 
