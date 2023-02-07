@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -92,9 +93,87 @@ public class MyGdxGame extends ApplicationAdapter {
 		for (int i = 0; i < players.length; i++) {
 			players[i] = new Player("noname", 0);
 		}
+		loadTableOfRecords();
 		gameStart();
 	}
 
+	@Override
+	public void render () {
+		// касания экрана
+		if(Gdx.input.justTouched()){
+			touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			camera.unproject(touch);
+			if(situation == PLAY_GAME) {
+				for (int i = komar.length - 1; i >= 0; i--) {
+					if (komar[i].isAlive && komar[i].hit(touch.x, touch.y)) {
+						kills++;
+						if (soundOn) {
+							sndKomar[MathUtils.random(0, 3)].play();
+						}
+						if (kills == komar.length) {
+							situation = ENTER_NAME;
+						}
+						break;
+					}
+				}
+			}
+			if(situation == SHOW_TABLE){
+				gameStart();
+			}
+			if(situation == ENTER_NAME){
+				keyboard.hit(touch.x, touch.y);
+				if(keyboard.endOfEdit()){
+					situation = SHOW_TABLE;
+					players[players.length-1].name = keyboard.getText();
+					players[players.length-1].time = timeCurrently;
+					sortTableOfRecords();
+					saveTableOfRecords();
+				}
+			}
+
+			// нажатия на экранные кнопки
+			if(btnExit.hit(touch.x, touch.y)){
+				Gdx.app.exit(); // выход из игры
+			}
+			if(btnSound.hit(touch.x, touch.y)){
+				soundOn = !soundOn;
+			}
+		}
+
+		// события игры
+		for(int i=0; i<komar.length; i++) {
+			komar[i].fly();
+		}
+		if(situation == PLAY_GAME) {
+			timeCurrently = TimeUtils.millis() - timeStartGame;
+		}
+
+		// вывод изображений
+		camera.update();
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
+		batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
+		for(int i=0; i<komar.length; i++) {
+			batch.draw(imgKomar[komar[i].faza], komar[i].x, komar[i].y, komar[i].width, komar[i].height, 0, 0, 500, 500, komar[i].isFlip(), false);
+		}
+		batch.draw(imgBtnExit, btnExit.x, btnExit.y, btnExit.width, btnExit.height);
+		if(soundOn) {
+			batch.draw(imgBtnSndOn, btnSound.x, btnSound.y, btnSound.width, btnSound.height);
+		} else {
+			batch.draw(imgBtnSndOff, btnSound.x, btnSound.y, btnSound.width, btnSound.height);
+		}
+		font.draw(batch, "KILLS: "+kills, 10, SCR_HEIGHT -10);
+		font.draw(batch, "TIME: "+timeToString(timeCurrently), SCR_WIDTH -450, SCR_HEIGHT -10);
+		if(situation == ENTER_NAME){
+			keyboard.draw(batch);
+		}
+		if(situation == SHOW_TABLE){
+			for (int i = 0; i < players.length; i++) {
+				font.draw(batch, players[i].name+"...."+timeToString(players[i].time), SCR_WIDTH/3, SCR_HEIGHT*3/4-i*50);
+			}
+		}
+		batch.end();
+	}
 	void createFont(){
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("wellwait.otf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -150,84 +229,23 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 	}
 
-	@Override
-	public void render () {
-		// касания экрана
-		if(Gdx.input.justTouched()){
-			touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(touch);
-			if(situation == PLAY_GAME) {
-				for (int i = komar.length - 1; i >= 0; i--) {
-					if (komar[i].isAlive && komar[i].hit(touch.x, touch.y)) {
-						kills++;
-						if (soundOn) {
-							sndKomar[MathUtils.random(0, 3)].play();
-						}
-						if (kills == komar.length) {
-							situation = ENTER_NAME;
-						}
-						break;
-					}
-				}
-			}
-			if(situation == SHOW_TABLE){
-				gameStart();
-			}
-			if(situation == ENTER_NAME){
-				keyboard.hit(touch.x, touch.y);
-				if(keyboard.endOfEdit()){
-					situation = SHOW_TABLE;
-					players[players.length-1].name = keyboard.getText();
-					players[players.length-1].time = timeCurrently;
-					sortTableOfRecords();
-				}
-			}
-
-			// нажатия на экранные кнопки
-			if(btnExit.hit(touch.x, touch.y)){
-				Gdx.app.exit(); // выход из игры
-			}
-			if(btnSound.hit(touch.x, touch.y)){
-				soundOn = !soundOn;
-			}
+	void saveTableOfRecords() {
+		Preferences preferences = Gdx.app.getPreferences("TaleOfRecords");
+		for (int i = 0; i < players.length; i++) {
+			preferences.putString("name"+i, players[i].name);
+			preferences.putLong("time"+i, players[i].time);
 		}
-
-		// события игры
-		for(int i=0; i<komar.length; i++) {
-			komar[i].fly();
-		}
-		if(situation == PLAY_GAME) {
-			timeCurrently = TimeUtils.millis() - timeStartGame;
-		}
-
-		// вывод изображений
-		camera.update();
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-		for(int i=0; i<komar.length; i++) {
-			batch.draw(imgKomar[komar[i].faza], komar[i].x, komar[i].y, komar[i].width, komar[i].height, 0, 0, 500, 500, komar[i].isFlip(), false);
-		}
-		batch.draw(imgBtnExit, btnExit.x, btnExit.y, btnExit.width, btnExit.height);
-		if(soundOn) {
-			batch.draw(imgBtnSndOn, btnSound.x, btnSound.y, btnSound.width, btnSound.height);
-		} else {
-			batch.draw(imgBtnSndOff, btnSound.x, btnSound.y, btnSound.width, btnSound.height);
-		}
-		font.draw(batch, "KILLS: "+kills, 10, SCR_HEIGHT -10);
-		font.draw(batch, "TIME: "+timeToString(timeCurrently), SCR_WIDTH -450, SCR_HEIGHT -10);
-		if(situation == ENTER_NAME){
-			keyboard.draw(batch);
-		}
-		if(situation == SHOW_TABLE){
-			for (int i = 0; i < players.length; i++) {
-				font.draw(batch, players[i].name+"...."+timeToString(players[i].time), SCR_WIDTH/3, SCR_HEIGHT*3/4-i*50);
-			}
-
-		}
-		batch.end();
+		preferences.flush();
 	}
-	
+
+	void loadTableOfRecords() {
+		Preferences preferences = Gdx.app.getPreferences("TaleOfRecords");
+		for (int i = 0; i < players.length; i++) {
+			if(preferences.contains("name"+i)) players[i].name = preferences.getString("name"+i, "none");
+			if(preferences.contains("time"+i)) players[i].time = preferences.getLong("time"+i, 0);
+		}
+	}
+
 	@Override
 	public void dispose () {
 		batch.dispose();
