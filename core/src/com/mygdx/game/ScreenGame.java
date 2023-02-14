@@ -18,7 +18,7 @@ public class ScreenGame implements Screen {
     Texture imgBackGround; // фоновое изображение
     Texture imgBtnExit;
     Texture imgBtnSndOn, imgBtnSndOff;
-    Texture imgBtnPause, imgBtnPlay;
+    //Texture imgBtnPause, imgBtnPlay;
 
     Sound[] sndKomar = new Sound[4];
     // Music sndMusic;
