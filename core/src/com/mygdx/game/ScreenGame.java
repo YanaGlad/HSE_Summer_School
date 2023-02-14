@@ -118,7 +118,7 @@ public class ScreenGame implements Screen {
 
             // нажатия на экранные кнопки
             if(btnExit.hit(mgg.touch.x, mgg.touch.y)){
-                Gdx.app.exit(); // выход из игры
+                mgg.setScreen(mgg.screenIntro); // выход из игры
             }
             if(btnSound.hit(mgg.touch.x, mgg.touch.y)){
                 soundOn = !soundOn;

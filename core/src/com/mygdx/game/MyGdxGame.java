@@ -39,9 +39,9 @@ public class MyGdxGame extends Game {
 		createFont();
 		keyboard = new InputKeyboard(SCR_WIDTH, SCR_HEIGHT, 10);
 
-		screenIntro = new ScreenIntro();
+		screenIntro = new ScreenIntro(this);
 		screenGame = new ScreenGame(this);
-		setScreen(screenGame);
+		setScreen(screenIntro);
 	}
 
 	void createFont(){
@@ -59,5 +59,6 @@ public class MyGdxGame extends Game {
 	public void dispose () {
 		batch.dispose();
 		keyboard.dispose();
+		font.dispose();
 	}
 }
