@@ -54,7 +54,7 @@ public class ScreenGame implements Screen {
         for(int i=0; i<imgKomar.length; i++) {
             imgKomar[i] = new Texture("mosq"+i+".png"); // создать объект-картинку и загрузить в него изображение
         }
-        imgBackGround = new Texture("moscowcity.jpg");
+        imgBackGround = new Texture("swamp0.jpg");
         imgBtnExit = new Texture("exit.png");
         imgBtnSndOn = new Texture("sndon.png");
         imgBtnSndOff = new Texture("sndoff.png");

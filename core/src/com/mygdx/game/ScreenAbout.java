@@ -7,24 +7,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 
-public class ScreenIntro implements Screen {
+public class ScreenAbout implements Screen {
     MyGdxGame mgg;
 
     Texture imgBackGround; // фоновое изображение
 
-    TextButton btnPlay;
-    TextButton btnSettings;
-    TextButton btnAbout;
-    TextButton btnExit;
+    TextButton btnBack;
+    String textAboutGame =  "Эта игра создана в рамках курса\n" +
+                            "Mbile Game Development на языке\n" +
+                            "java с использованием фреймворка\n" +
+                            "LibGDX.\n" +
+                            "Цель игры - как можно быстрее\n" +
+                            "сбить всех комаров. Победитель\n" +
+                            "попадает в таблицу рекордов.";
 
-    public ScreenIntro(MyGdxGame g) {
+    public ScreenAbout(MyGdxGame g) {
         mgg = g;
 
-        imgBackGround = new Texture("swamp1.jpg");
-        btnPlay = new TextButton(mgg.font, "Play", 500, 500);
-        btnSettings = new TextButton(mgg.font, "Settings", 500, 400);
-        btnAbout = new TextButton(mgg.font, "About", 500, 300);
-        btnExit = new TextButton(mgg.font, "Exit", 500, 200);
+        imgBackGround = new Texture("swamp3.jpg");
+
+        btnBack = new TextButton(mgg.font, "Back", 500, 100);
     }
 
     @Override
@@ -38,17 +40,9 @@ public class ScreenIntro implements Screen {
         if(Gdx.input.justTouched()){
             mgg.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             mgg.camera.unproject(mgg.touch);
-            if(btnPlay.hit(mgg.touch.x, mgg.touch.y)){
-                mgg.setScreen(mgg.screenGame);
-            }
-            if(btnSettings.hit(mgg.touch.x, mgg.touch.y)){
 
-            }
-            if(btnAbout.hit(mgg.touch.x, mgg.touch.y)){
-                mgg.setScreen(mgg.screenAbout);
-            }
-            if(btnExit.hit(mgg.touch.x, mgg.touch.y)){
-                Gdx.app.exit();
+            if(btnBack.hit(mgg.touch.x, mgg.touch.y)){
+                mgg.setScreen(mgg.screenIntro);
             }
         }
 
@@ -60,10 +54,8 @@ public class ScreenIntro implements Screen {
         mgg.batch.setProjectionMatrix(mgg.camera.combined);
         mgg.batch.begin();
         mgg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        btnPlay.font.draw(mgg.batch, btnPlay.text, btnPlay.x, btnPlay.y);
-        btnSettings.font.draw(mgg.batch, btnSettings.text, btnSettings.x, btnSettings.y);
-        btnAbout.font.draw(mgg.batch, btnAbout.text, btnAbout.x, btnAbout.y);
-        btnExit.font.draw(mgg.batch, btnExit.text, btnExit.x, btnExit.y);
+        mgg.font.draw(mgg.batch, textAboutGame, 100, 600);
+        btnBack.font.draw(mgg.batch, btnBack.text, btnBack.x, btnBack.y);
         mgg.batch.end();
     }
 
@@ -89,6 +81,6 @@ public class ScreenIntro implements Screen {
 
     @Override
     public void dispose() {
-
+        imgBackGround.dispose();
     }
 }
