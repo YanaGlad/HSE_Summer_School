@@ -6,6 +6,7 @@ import static com.mygdx.game.MyGdxGame.SCR_WIDTH;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
@@ -21,21 +22,21 @@ public class ScreenGame implements Screen {
     //Texture imgBtnPause, imgBtnPlay;
 
     Sound[] sndKomar = new Sound[4];
-    // Music sndMusic;
+    Music sndMusic;
+
+    // логические переменные
+    boolean soundOn = true;
+    boolean musicOn = true;
 
     // кнопки интерфейса игры
     MosButton btnExit;
-    MosButton btnSound;
 
     // создаём массив ссылок на объекты комаров
-    Mosquito[] komar = new Mosquito[5];
+    Mosquito[] komar = new Mosquito[35];
     int kills;
 
     // переменные для работы с таймером
     long timeStartGame, timeCurrently;
-
-    // логические переменные
-    boolean soundOn = true;
 
     // состояния игры
     public static final int PLAY_GAME = 1, ENTER_NAME = 2, SHOW_TABLE = 3;
@@ -63,13 +64,12 @@ public class ScreenGame implements Screen {
         for(int i=0; i<sndKomar.length; i++) {
             sndKomar[i] = Gdx.audio.newSound(Gdx.files.internal("mos"+i+".mp3"));
         }
-        //sndMusic = Gdx.audio.newMusic(Gdx.files.internal("jinglebells.mp3"));
-        //sndMusic.setLooping(true);
-        //sndMusic.play();
+        sndMusic = Gdx.audio.newMusic(Gdx.files.internal("jinglebells.mp3"));
+        sndMusic.setLooping(true);
+        sndMusic.setVolume(0.5f);
 
         // создаём кнопки
         btnExit = new MosButton(SCR_WIDTH -60, SCR_HEIGHT -60, 50);
-        btnSound = new MosButton(SCR_WIDTH -60, SCR_HEIGHT -120, 50);
 
         for (int i = 0; i < players.length; i++) {
             players[i] = new Player("noname", 0);
@@ -120,9 +120,6 @@ public class ScreenGame implements Screen {
             if(btnExit.hit(mgg.touch.x, mgg.touch.y)){
                 mgg.setScreen(mgg.screenIntro); // выход из игры
             }
-            if(btnSound.hit(mgg.touch.x, mgg.touch.y)){
-                soundOn = !soundOn;
-            }
         }
 
         // события игры
@@ -142,11 +139,7 @@ public class ScreenGame implements Screen {
             mgg.batch.draw(imgKomar[komar[i].faza], komar[i].x, komar[i].y, komar[i].width, komar[i].height, 0, 0, 500, 500, komar[i].isFlip(), false);
         }
         mgg.batch.draw(imgBtnExit, btnExit.x, btnExit.y, btnExit.width, btnExit.height);
-        if(soundOn) {
-            mgg.batch.draw(imgBtnSndOn, btnSound.x, btnSound.y, btnSound.width, btnSound.height);
-        } else {
-            mgg.batch.draw(imgBtnSndOff, btnSound.x, btnSound.y, btnSound.width, btnSound.height);
-        }
+
         mgg.font.draw(mgg.batch, "KILLS: "+kills, 10, SCR_HEIGHT -10);
         mgg.font.draw(mgg.batch, "TIME: "+timeToString(timeCurrently), SCR_WIDTH -450, SCR_HEIGHT -10);
         if(situation == ENTER_NAME){
@@ -173,6 +166,10 @@ public class ScreenGame implements Screen {
         for(int i=0; i<komar.length; i++){
             komar[i] = new Mosquito();
         }
+        // включаем музыку
+        if(musicOn) {
+            sndMusic.play();
+        }
 
         // узнаём время старта игры
         timeStartGame = TimeUtils.millis();
@@ -183,7 +180,6 @@ public class ScreenGame implements Screen {
     }
 
     void sortTableOfRecords(){
-
         for (int i = 0; i < players.length; i++) {
             if(players[i].time == 0) players[i].time = 1000000000;
         }
@@ -221,6 +217,13 @@ public class ScreenGame implements Screen {
         }
     }
 
+    void clearTableOfRecords() {
+        for (int i = 0; i < players.length; i++) {
+            players[i].name = "noname";
+            players[i].time = 0;
+        }
+    }
+
     @Override
     public void resize(int width, int height) {
 
@@ -238,7 +241,7 @@ public class ScreenGame implements Screen {
 
     @Override
     public void hide() {
-
+        sndMusic.stop();
     }
 
     @Override
@@ -251,6 +254,6 @@ public class ScreenGame implements Screen {
         }
         imgBackGround.dispose();
         imgBtnExit.dispose();
-        //sndMusic.dispose();
+        sndMusic.dispose();
     }
 }

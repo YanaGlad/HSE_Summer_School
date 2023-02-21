@@ -22,7 +22,7 @@ public class ScreenSettings implements Screen {
 
         imgBackGround = new Texture("swamp2.jpg");
         btnSound = new TextButton(mgg.font, "Sound on", 500, 500);
-        btnMusic = new TextButton(mgg.font, "Music off", 500, 400);
+        btnMusic = new TextButton(mgg.font, "Music on", 500, 400);
         btnClearTable = new TextButton(mgg.font, "Clear records", 500, 300);
         btnBack = new TextButton(mgg.font, "Back", 500, 200);
     }
@@ -39,16 +39,23 @@ public class ScreenSettings implements Screen {
             mgg.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             mgg.camera.unproject(mgg.touch);
             if(btnSound.hit(mgg.touch.x, mgg.touch.y)){
-
+                mgg.screenGame.soundOn = !mgg.screenGame.soundOn;
+                if(mgg.screenGame.soundOn) {
+                    btnSound.text = "Sound on";
+                } else {
+                    btnSound.text = "Sound off";
+                }
             }
             if(btnMusic.hit(mgg.touch.x, mgg.touch.y)){
-
+                mgg.screenGame.musicOn = !mgg.screenGame.musicOn;
+                if(mgg.screenGame.musicOn){
+                    btnMusic.text = "Music on";
+                } else {
+                    btnMusic.text = "Music off";
+                }
             }
             if(btnClearTable.hit(mgg.touch.x, mgg.touch.y)){
-                for (int i = 0; i < mgg.screenGame.players.length; i++) {
-                    mgg.screenGame.players[i].name = "noname";
-                    mgg.screenGame.players[i].time = 0;
-                }
+                mgg.screenGame.clearTableOfRecords();
                 mgg.screenGame.saveTableOfRecords();
                 btnClearTable.text = "Records Cleared";
             }
