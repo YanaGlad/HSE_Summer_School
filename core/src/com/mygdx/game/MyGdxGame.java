@@ -22,10 +22,10 @@ public class MyGdxGame extends Game {
 
 	// системные объекты
 	SpriteBatch batch; // ссылка на объект, отвечающий за вывод изображений
-	OrthographicCamera camera;
-	Vector3 touch;
-	BitmapFont font;
-	InputKeyboard keyboard;
+	OrthographicCamera camera; // пересчитывает размеры для различных экранов
+	Vector3 touch; // этот объект хранит координаты касания экрана
+	BitmapFont font; // шрифт
+	InputKeyboard keyboard; // экранная клавиатура
 
 	ScreenIntro screenIntro;
 	ScreenGame screenGame;

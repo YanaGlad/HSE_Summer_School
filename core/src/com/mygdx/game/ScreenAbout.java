@@ -11,7 +11,6 @@ public class ScreenAbout implements Screen {
     MyGdxGame mgg;
 
     Texture imgBackGround; // фоновое изображение
-
     TextButton btnBack;
     String textAboutGame =  "Эта игра создана в рамках курса\n" +
                             "Mbile Game Development на языке\n" +
