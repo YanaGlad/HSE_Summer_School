@@ -59,5 +59,44 @@ public class JavaBasics {
 
         str += "\nNumber 2 is: " + i2;
         System.out.println(str);
+
+        int number = 90;
+        boolean isMod3 = number % 3 == 0;
+        if (isMod3) {
+            System.out.println("Number is a multiple of three");
+        } else {
+            System.out.println("Number is not a multiple of three");
+        }
+
+        int one = 10;
+        int two = 90;
+        int three = -60;
+
+        if (one < two && one < three) {
+            System.out.println("Minimum: " + one);
+        } else if (two < three) {
+            System.out.println("Minimun: " + two);
+        } else {
+            System.out.println("Minumum: " + three);
+        }
+
+        String language = "Java";
+        switch (language) {
+            case "Java":
+                System.out.println("Best language");
+                break;
+            case "Kotlin":
+                System.out.println("Even better language!");
+                break;
+            case "Python":
+                System.out.println("Are you serious?");
+                break;
+            case "C++":
+                System.out.println("Hardcore");
+                break;
+            default:
+                System.out.println("Unknown language");
+                break;
+        }
     }
 }
