@@ -23,47 +23,16 @@ public class MyGdxGame extends Game {
 	// системные объекты
 	SpriteBatch batch; // ссылка на объект, отвечающий за вывод изображений
 	OrthographicCamera camera; // пересчитывает размеры для различных экранов
-	Vector3 touch; // этот объект хранит координаты касания экрана
-	BitmapFont font; // шрифт
-	InputKeyboard keyboard; // экранная клавиатура
-
-	ScreenIntro screenIntro;
-	ScreenGame screenGame;
-	ScreenSettings screenSettings;
-	ScreenAbout screenAbout;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch(); // создать объект, отвечающий за вывод изображений
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, SCR_WIDTH, SCR_HEIGHT);
-		touch = new Vector3();
-		createFont();
-		keyboard = new InputKeyboard(SCR_WIDTH, SCR_HEIGHT, 10);
-
-		screenIntro = new ScreenIntro(this);
-		screenGame = new ScreenGame(this);
-		screenSettings = new ScreenSettings(this);
-		screenAbout = new ScreenAbout(this);
-
-		setScreen(screenIntro);
-	}
-
-	void createFont(){
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("wellwait.otf"));
-		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		parameter.characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
-		parameter.size = 50;
-		parameter.color = Color.ORANGE;
-		parameter.borderWidth = 3;
-		parameter.borderColor = Color.BLACK;
-		font = generator.generateFont(parameter);
 	}
 
 	@Override
 	public void dispose () {
 		batch.dispose();
-		keyboard.dispose();
-		font.dispose();
 	}
 }
