@@ -18,5 +18,20 @@ public class JavaBasics2 {
 
         String[] strings = new String[100];
         String[] strings1 = {"aa", "bb", "???"};
+
+        short size = 5;
+        int[] array2 = new int[size];
+
+        for (int i = 0; i < size; i++) {
+            array2[i] = i + 1;
+            System.out.print(array2[i] + " ");
+        }
+
+        int i = 0;
+        while (i < size) {
+            array2[i] = i + 1;
+            System.out.print(array2[i] + " ");
+            i++;
+        }
     }
 }
