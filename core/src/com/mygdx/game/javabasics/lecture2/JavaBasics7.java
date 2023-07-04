@@ -16,6 +16,9 @@ public class JavaBasics7 {
         boss.fireEmployee(employee2);
 
         String str = null;
+        Employee employee3 = null;
+
+        Object object = (Object) employee;
 
         Lessons algebra = Lessons.ALGEBRA;
 
@@ -30,5 +33,14 @@ public class JavaBasics7 {
                 System.out.println("Geometry");
                 break;
         }
+
+        int a = 1000;
+        long s = 900000L;
+        short d = (short) s;
+
+        Computable[] computables = new Computable[3];
+        computables[0] = new SumComputable();
+        computables[1] = new MinusComputable();
+        computables[2] = new SumComputable();
     }
 }
