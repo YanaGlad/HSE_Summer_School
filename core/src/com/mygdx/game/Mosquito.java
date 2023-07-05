@@ -1,6 +1,11 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.graphics.Texture;
+import static com.mygdx.game.MyGdxGame.SCR_HEIGHT;
+import static com.mygdx.game.MyGdxGame.SCR_WIDTH;
+
+import com.badlogic.gdx.math.MathUtils;
+
+import java.util.Random;
 
 /**
  * @author y.gladkikh
@@ -10,27 +15,42 @@ public class Mosquito {
     float x, y;
     float vx, vy;
     float width, height;
-    Texture img;
+    int faza, nFaz = 10;
 
     Mosquito(
             float x,
             float y,
             float width,
-            float height,
-            Texture img
+            float height
     ) {
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
-        this.img = img;
+        float size = width * 1 / (new Random()).nextInt(3);
+        this.width = size;
+        this.height = size;
 
-        vx = 5;
-        vy = 5;
+        vx = MathUtils.random(-7f, 7);
+        vy = MathUtils.random(-7f, 7f);
+
+        faza = MathUtils.random(0, nFaz - 1);
     }
 
-    void checkDirections(float SCR_WIDTH, float SCR_HEIGHT) {
+    void checkDirections() {
         if (x < 0 || x > SCR_WIDTH - width) vx = -vx;
         if (y < 0 || y > SCR_HEIGHT - height) vy = -vy;
+    }
+
+    void move() {
+        x += vx;
+        y += vy;
+
+        if (++faza == nFaz) faza = 0;
+    }
+
+    boolean isFlip() {
+        if (vx > 0) {
+            return true;
+        }
+        return false;
     }
 }

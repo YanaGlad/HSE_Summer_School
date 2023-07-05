@@ -19,11 +19,10 @@ public class MyGdxGame extends Game {
     // ширина и высота экрана
     public static float SCR_WIDTH;
     public static float SCR_HEIGHT;
-    Texture imgMosquito;
-    float x, y;
 
-    float vx, vy; // скорости движения по х и y
-    float width, height;
+    Mosquito[] mosquito;
+    Texture[] imges;
+
     Texture imgBackGround; // фоновое изображение
 
     // системные объекты
@@ -41,16 +40,28 @@ public class MyGdxGame extends Game {
         camera.setToOrtho(false, SCR_WIDTH, SCR_HEIGHT);
 
         imgBackGround = new Texture("swamp0.jpg");
-        imgMosquito = new Texture("mosq0.png");
 
-        vx = 5;
-        vy = 5;
+        float width = SCR_WIDTH / 5;
+        float height = SCR_HEIGHT / 5 + 100;
 
-        x = 150;
-        y = 150;
+        imges = new Texture[]{
+                new Texture("mosq0.png"),
+                new Texture("mosq1.png"),
+                new Texture("mosq2.png"),
+                new Texture("mosq3.png"),
+                new Texture("mosq4.png"),
+                new Texture("mosq5.png"),
+                new Texture("mosq6.png"),
+                new Texture("mosq7.png"),
+                new Texture("mosq8.png"),
+                new Texture("mosq9.png"),
+                new Texture("mosq10.png"),
+        };
 
-        width = SCR_WIDTH / 4;
-        height = SCR_HEIGHT / 4 + 100;
+        mosquito = new Mosquito[25];
+        for (int i = 0; i < mosquito.length; i++) {
+            mosquito[i] = new Mosquito(0, 0, width, height);
+        }
     }
 
     @Override
@@ -59,13 +70,14 @@ public class MyGdxGame extends Game {
 
         batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-        batch.draw(imgMosquito, x, y, width, height);
+        for (int i = 0; i < mosquito.length; i++) {
+            mosquito[i].checkDirections();
+            mosquito[i].move();
+        }
 
-        if (x < 0 || x > SCR_WIDTH - width) vx = -vx;
-        if (y < 0 || y > SCR_HEIGHT - height) vy = -vy;
-
-        x += vx;
-        y += vy;
+        for (int i = 0; i < mosquito.length; i++) {
+            batch.draw(imges[mosquito[i].faza], mosquito[i].x, mosquito[i].y, mosquito[i].width, mosquito[i].height, 0, 0, 500, 500, mosquito[i].isFlip(), false);
+        }
 
         batch.end();
     }
@@ -73,7 +85,9 @@ public class MyGdxGame extends Game {
     @Override
     public void dispose() {
         batch.dispose();
-        imgMosquito.dispose();
+        for (int i = 0; i < mosquito.length; i++) {
+            imges[i].dispose();
+        }
         imgBackGround.dispose();
     }
 }
