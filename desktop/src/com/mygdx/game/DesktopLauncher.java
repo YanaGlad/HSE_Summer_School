@@ -13,9 +13,6 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 
-		SCR_WIDTH = 1280;
-		SCR_HEIGHT = 720;
-
 		config.setWindowedMode((int) SCR_WIDTH, (int) SCR_HEIGHT);
 		config.setTitle("Game");
 		new Lwjgl3Application(new MyGdxGame(), config);

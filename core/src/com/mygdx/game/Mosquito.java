@@ -18,7 +18,7 @@ public class Mosquito {
     boolean isAlive = true;
 
     Mosquito() {
-        width = height = MathUtils.random(100, 450);
+        width = height = MathUtils.random(100, 250);
         x = SCR_WIDTH / 2 - width / 2;
         y = SCR_HEIGHT / 2 - height / 2;
 
