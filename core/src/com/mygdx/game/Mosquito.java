@@ -5,8 +5,6 @@ import static com.mygdx.game.MyGdxGame.SCR_WIDTH;
 
 import com.badlogic.gdx.math.MathUtils;
 
-import java.util.Random;
-
 /**
  * @author y.gladkikh
  */
@@ -15,7 +13,7 @@ public class Mosquito {
     float x, y;
     float vx, vy;
     float width, height;
-    int phase, nFaz = 10;
+    int phase, nPhase = 10;
 
     boolean isAlive = true;
 
@@ -24,10 +22,10 @@ public class Mosquito {
         x = SCR_WIDTH / 2 - width / 2;
         y = SCR_HEIGHT / 2 - height / 2;
 
-        vx = MathUtils.random(-7f, 7);
+        vx = MathUtils.random(-7f, 7f);
         vy = MathUtils.random(-7f, 7f);
 
-        phase = MathUtils.random(0, nFaz - 1);
+        phase = MathUtils.random(0, nPhase - 1);
     }
 
     void checkDirections() {
@@ -41,7 +39,7 @@ public class Mosquito {
 
         if (isAlive) {
             checkDirections();
-            if (++phase == nFaz) phase = 0;
+            if (++phase == nPhase) phase = 0;
         }
     }
 

@@ -13,6 +13,7 @@ public class MyGdxGame extends Game {
     public static float SCR_HEIGHT;
 
     Mosquito[] mosquito;
+
     Texture[] imges;
 
     Texture imgBackGround; // фоновое изображение
@@ -75,7 +76,18 @@ public class MyGdxGame extends Game {
         }
 
         for (int i = 0; i < mosquito.length; i++) {
-            batch.draw(imges[mosquito[i].phase], mosquito[i].x, mosquito[i].y, mosquito[i].width, mosquito[i].height, 0, 0, 500, 500, mosquito[i].isFlip(), false);
+            batch.draw(
+                    imges[mosquito[i].phase],
+                    mosquito[i].x,
+                    mosquito[i].y,
+                    mosquito[i].width,
+                    mosquito[i].height,
+                    0,
+                    0,
+                    500,
+                    500,
+                    mosquito[i].isFlip(),
+                    false);
         }
 
         for (int i = 0; i < mosquito.length; i++) {
