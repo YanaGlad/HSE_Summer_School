@@ -1,19 +1,11 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.TimeUtils;
 
 public class MyGdxGame extends Game {
     // ширина и высота экрана
@@ -29,10 +21,13 @@ public class MyGdxGame extends Game {
     SpriteBatch batch; // Объект, отвечающий за вывод изображений
     OrthographicCamera camera; // пересчитывает размеры для различных экранов
 
+    Vector3 touch;
+
     @Override
     public void create() {
         batch = new SpriteBatch(); // создать объект, отвечающий за вывод изображений
         camera = new OrthographicCamera();
+        touch = new Vector3();
 
         SCR_WIDTH = Gdx.graphics.getWidth();
         SCR_HEIGHT = Gdx.graphics.getHeight();
@@ -41,9 +36,7 @@ public class MyGdxGame extends Game {
 
         imgBackGround = new Texture("swamp0.jpg");
 
-        float width = SCR_WIDTH / 5;
-        float height = SCR_HEIGHT / 5 + 100;
-
+        // Задание: сократить через цикл
         imges = new Texture[]{
                 new Texture("mosq0.png"),
                 new Texture("mosq1.png"),
@@ -60,7 +53,7 @@ public class MyGdxGame extends Game {
 
         mosquito = new Mosquito[25];
         for (int i = 0; i < mosquito.length; i++) {
-            mosquito[i] = new Mosquito(0, 0, width, height);
+            mosquito[i] = new Mosquito();
         }
     }
 
@@ -70,13 +63,23 @@ public class MyGdxGame extends Game {
 
         batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-        for (int i = 0; i < mosquito.length; i++) {
-            mosquito[i].checkDirections();
-            mosquito[i].move();
+        // касания экрана
+        if (Gdx.input.justTouched()) {
+            touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(touch);
+            for (int i = mosquito.length - 1; i >= 0; i--) {
+                if (mosquito[i].isAlive && mosquito[i].hit(touch.x, touch.y)) {
+                    // увеличить очки
+                }
+            }
         }
 
         for (int i = 0; i < mosquito.length; i++) {
-            batch.draw(imges[mosquito[i].faza], mosquito[i].x, mosquito[i].y, mosquito[i].width, mosquito[i].height, 0, 0, 500, 500, mosquito[i].isFlip(), false);
+            batch.draw(imges[mosquito[i].phase], mosquito[i].x, mosquito[i].y, mosquito[i].width, mosquito[i].height, 0, 0, 500, 500, mosquito[i].isFlip(), false);
+        }
+
+        for (int i = 0; i < mosquito.length; i++) {
+            mosquito[i].move();
         }
 
         batch.end();

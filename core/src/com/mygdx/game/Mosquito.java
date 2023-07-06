@@ -15,24 +15,19 @@ public class Mosquito {
     float x, y;
     float vx, vy;
     float width, height;
-    int faza, nFaz = 10;
+    int phase, nFaz = 10;
 
-    Mosquito(
-            float x,
-            float y,
-            float width,
-            float height
-    ) {
-        this.x = x;
-        this.y = y;
-        float size = width * 1 / (new Random()).nextInt(3);
-        this.width = size;
-        this.height = size;
+    boolean isAlive = true;
+
+    Mosquito() {
+        width = height = MathUtils.random(100, 450);
+        x = SCR_WIDTH / 2 - width / 2;
+        y = SCR_HEIGHT / 2 - height / 2;
 
         vx = MathUtils.random(-7f, 7);
         vy = MathUtils.random(-7f, 7f);
 
-        faza = MathUtils.random(0, nFaz - 1);
+        phase = MathUtils.random(0, nFaz - 1);
     }
 
     void checkDirections() {
@@ -44,11 +39,25 @@ public class Mosquito {
         x += vx;
         y += vy;
 
-        if (++faza == nFaz) faza = 0;
+        if (isAlive) {
+            checkDirections();
+            if (++phase == nFaz) phase = 0;
+        }
     }
 
     boolean isFlip() {
         if (vx > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    boolean hit(float tx, float ty) {
+        if (x < tx && tx < x + width && y < ty && ty < y + height) {
+            isAlive = false;
+            phase = 10;
+            vx = 0;
+            vy = -8;
             return true;
         }
         return false;
