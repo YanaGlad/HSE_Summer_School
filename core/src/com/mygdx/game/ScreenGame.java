@@ -23,20 +23,10 @@ public class ScreenGame implements Screen {
 
         imgBackGround = new Texture("swamp0.jpg");
 
-        // Задание: сократить через цикл
-        imges = new Texture[]{
-                new Texture("mosq0.png"),
-                new Texture("mosq1.png"),
-                new Texture("mosq2.png"),
-                new Texture("mosq3.png"),
-                new Texture("mosq4.png"),
-                new Texture("mosq5.png"),
-                new Texture("mosq6.png"),
-                new Texture("mosq7.png"),
-                new Texture("mosq8.png"),
-                new Texture("mosq9.png"),
-                new Texture("mosq10.png"),
-        };
+        imges = new Texture[11];
+        for (int i = 0; i < 11; i++) {
+            imges[i] = new Texture("mosq" + i + ".png");
+        }
 
         mosquito = new Mosquito[25];
         for (int i = 0; i < mosquito.length; i++) {

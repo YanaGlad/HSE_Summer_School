@@ -12,9 +12,10 @@ public class TextButton {
     public TextButton(BitmapFont font, String text, float x, float y) {
         this.font = font;
         this.text = text;
-        GlyphLayout gl = new GlyphLayout(font, text);
-        width = gl.width;
-        height = gl.height;
+
+        width = 55;
+        height = 55;
+
         this.x = x;
         this.y = y;
     }

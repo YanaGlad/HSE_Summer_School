@@ -41,12 +41,7 @@ public class ScreenIntro implements Screen {
             if(btnPlay.hit(mgg.touch.x, mgg.touch.y)){
                 mgg.setScreen(mgg.screenGame);
             }
-//            if(btnSettings.hit(mgg.touch.x, mgg.touch.y)){
-//                mgg.setScreen(mgg.screenSettings);
-//            }
-//            if(btnAbout.hit(mgg.touch.x, mgg.touch.y)){
-//                mgg.setScreen(mgg.screenAbout);
-//            }
+
             if(btnExit.hit(mgg.touch.x, mgg.touch.y)){
                 Gdx.app.exit();
             }
@@ -58,6 +53,7 @@ public class ScreenIntro implements Screen {
         // вывод изображений
         mgg.camera.update();
         mgg.batch.setProjectionMatrix(mgg.camera.combined);
+
         mgg.batch.begin();
         mgg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
         btnPlay.font.draw(mgg.batch, btnPlay.text, btnPlay.x, btnPlay.y);
