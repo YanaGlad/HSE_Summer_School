@@ -26,6 +26,8 @@ public class MyGdxGame extends Game {
     ScreenIntro screenIntro;
     ScreenGame screenGame;
 
+    int data;
+
     @Override
     public void create() {
         batch = new SpriteBatch(); // создать объект, отвечающий за вывод изображений
@@ -36,10 +38,15 @@ public class MyGdxGame extends Game {
 
         camera.setToOrtho(false, SCR_WIDTH, SCR_HEIGHT);
 
+        //пример
         screenIntro = new ScreenIntro(this);
-        screenGame = new ScreenGame(this);
+        screenGame = new ScreenGame(this, 0);
 
         setScreen(screenIntro);
+    }
+
+    void updateScreenGame(int numHouse) {
+        this.screenGame.house = numHouse;
     }
 
 

@@ -2,7 +2,10 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+
+import java.util.Random;
 
 /**
  * @author y.gladkikh
@@ -17,11 +20,23 @@ public class ScreenGame implements Screen {
 
     Texture imgBackGround; // фоновое изображение
 
+    Sound[] sounds;
 
-    public ScreenGame(MyGdxGame g) {
+    Random random;
+
+
+    int house;
+    public ScreenGame(MyGdxGame g, int house) {
+        this.house = house;
         mgg = g;
 
+        random = new Random();
         imgBackGround = new Texture("swamp0.jpg");
+
+        sounds = new Sound[4];
+        for (int i = 0; i < sounds.length; i++) {
+            sounds[i]= Gdx.audio.newSound(Gdx.files.internal("mos" + i + ".mp3"));
+        }
 
         imges = new Texture[11];
         for (int i = 0; i < 11; i++) {
@@ -51,6 +66,7 @@ public class ScreenGame implements Screen {
             mgg.camera.unproject(mgg.touch);
             for (int i = mosquito.length - 1; i >= 0; i--) {
                 if (mosquito[i].isAlive && mosquito[i].hit(mgg.touch.x, mgg.touch.y)) {
+                    sounds[random.nextInt(4)].play(1.0f);
                     // увеличить очки
                 }
             }
