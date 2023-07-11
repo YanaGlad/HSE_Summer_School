@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-
 import java.util.Random;
 
 /**
@@ -15,8 +14,10 @@ public class ScreenGame implements Screen {
     MyGdxGame mgg;
 
     Mosquito[] mosquito;
+    Bee[] bees;
 
     Texture[] imges;
+    Texture beeImage;
 
     Texture imgBackGround; // фоновое изображение
 
@@ -24,14 +25,12 @@ public class ScreenGame implements Screen {
 
     Random random;
 
-
-    int house;
-    public ScreenGame(MyGdxGame g, int house) {
-        this.house = house;
+    public ScreenGame(MyGdxGame g) {
         mgg = g;
 
         random = new Random();
         imgBackGround = new Texture("swamp0.jpg");
+        beeImage = new Texture("bee.png");
 
         sounds = new Sound[4];
         for (int i = 0; i < sounds.length; i++) {
@@ -46,6 +45,11 @@ public class ScreenGame implements Screen {
         mosquito = new Mosquito[25];
         for (int i = 0; i < mosquito.length; i++) {
             mosquito[i] = new Mosquito();
+        }
+
+        bees = new Bee[10];
+        for (int i = 0; i < bees.length; i++) {
+            bees[i] = new Bee();
         }
     }
 
@@ -72,6 +76,21 @@ public class ScreenGame implements Screen {
             }
         }
 
+        for (int i = 0; i < bees.length; i++) {
+            mgg.batch.draw(
+                    beeImage,
+                    bees[i].x,
+                    bees[i].y,
+                    bees[i].width,
+                    bees[i].height,
+                    0,
+                    0,
+                    500,
+                    500,
+                    bees[i].isFlip(),
+                    false);
+        }
+
         for (int i = 0; i < mosquito.length; i++) {
             mgg.batch.draw(
                     imges[mosquito[i].phase],
@@ -90,6 +109,10 @@ public class ScreenGame implements Screen {
         for (int i = 0; i < mosquito.length; i++) {
             mosquito[i].move();
         }
+        for (int i = 0; i < bees.length; i++) {
+            bees[i].move();
+        }
+
         mgg.batch.end();
     }
 

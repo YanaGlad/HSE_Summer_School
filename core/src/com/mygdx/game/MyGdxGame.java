@@ -4,8 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+=import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector3;
@@ -26,8 +25,6 @@ public class MyGdxGame extends Game {
     ScreenIntro screenIntro;
     ScreenGame screenGame;
 
-    int data;
-
     @Override
     public void create() {
         batch = new SpriteBatch(); // создать объект, отвечающий за вывод изображений
@@ -40,15 +37,10 @@ public class MyGdxGame extends Game {
 
         //пример
         screenIntro = new ScreenIntro(this);
-        screenGame = new ScreenGame(this, 0);
+        screenGame = new ScreenGame(this);
 
         setScreen(screenIntro);
     }
-
-    void updateScreenGame(int numHouse) {
-        this.screenGame.house = numHouse;
-    }
-
 
     void createFont(){
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("wellwait.otf"));
